@@ -46,8 +46,8 @@ def generate_dataset(path: str, fonts, fonts_path, font_size=28):
             lowercase_path = os.path.join(local_path, f"lowercase")
             try:
                 fnt = ImageFont.truetype(font, font_size)
-                write_on_image(fnt, chr(65 + i), lowercase_path, font)
-                write_on_image(fnt, char, uppercase_path, font)
+                write_on_image(fnt, chr(65 + i), uppercase_path, font)
+                write_on_image(fnt, char, lowercase_path , font)
             except:
                 print(f"Font : {font_path} is not loadable")
                 n -= 1
