@@ -3,6 +3,7 @@ import csv
 from PIL import Image, ImageDraw, ImageFont
 from utils import *
 from matplotlib import font_manager
+import zipfile
 
 
 def mkdir(path):
@@ -14,8 +15,10 @@ def mkdir(path):
     try:
         if not os.path.exists(path):
             os.mkdir(path)
+            return True
     except OSError:
         print(f"Creation of the directory {path} failed")
+        return False
 
 
 def generate_dataset_directories(path):
@@ -25,11 +28,15 @@ def generate_dataset_directories(path):
     mkdir(path)
 
 
-def generate_dataset(path: str, fonts, fonts_path, font_size=28):
+def generate_dataset(path: str, fonts, fonts_path, version, font_size=36):
     n = 0
     index = 1
     path_to_csv = os.path.join(path, "dataset", "data.csv")
+    path_to_version = os.path.join(path, "dataset", "version.txt")
     path = os.path.join(path, "dataset", "images")
+    with open(path_to_version, "w") as f_version:
+        f_version.write(str(version))
+
     with open(path_to_csv, "w", newline='', encoding='utf-8') as f_csv: 
         f_writer = csv.writer(f_csv, delimiter='§')
         for font, font_path in zip(fonts, fonts_path):
@@ -40,7 +47,7 @@ def generate_dataset(path: str, fonts, fonts_path, font_size=28):
                 continue
             n += 1
             for i in range(26):  # Letters
-                chars = [chr(97 + i)]#, chr(65 + i)]
+                chars = [chr(97 + i), chr(65 + i)]
                 for char in chars:
                     filename = f"image_{index}.bmp"
                     write_on_image(fnt, char, path, filename)
@@ -64,7 +71,7 @@ def get_clear_font_name(fonts):
     return clear
 
 
-def write_on_image(font, text :str, path_to_save :str, name_to_save :str, size=(28, 28)):
+def write_on_image(font, text :str, path_to_save :str, name_to_save :str, size=(40, 40)):
     width, height = size
     img = Image.new("RGB", (width, height), color=0)
     draw = ImageDraw.Draw(img)
@@ -93,3 +100,16 @@ def remove_fonts(fonts :list, fonts_to_remove :list):
             fonts.remove(font)
         except:
             print(f"font : {font} could not be remove")
+
+
+def zip_dataset():
+    zipf = zipfile.ZipFile('dataset.zip', 'w', zipfile.ZIP_DEFLATED)
+    for root, dirs, files in os.walk("dataset"):
+        for file in files:
+            zipf.write(os.path.join(root, file))
+    zipf.close()
+
+def unzip(path):
+    path_dataset = os.path.join(path, "dataset.zip")
+    with zipfile.ZipFile(path, 'r') as zip_ref:
+        zip_ref.extractall(os.path.join(path, "dataset"))
