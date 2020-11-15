@@ -32,22 +32,28 @@ def generate_dataset(path: str, fonts, fonts_path, font_size=28):
     path = os.path.join(path, "dataset", "images")
     with open(path_to_csv, "w", newline='', encoding='utf-8') as f_csv: 
         f_writer = csv.writer(f_csv, delimiter=',')
-
         for font, font_path in zip(fonts, fonts_path):
+            try:
+                fnt = ImageFont.truetype(font, font_size)
+            except:
+                print(f"Font : {font_path} is not loadable")
+                continue
             n += 1
-            for i in range(26):
+            for i in range(26):  # Letters
                 chars = [chr(97 + i), chr(65 + i)]
-                try:
-                    fnt = ImageFont.truetype(font, font_size)
-                    for char in chars:
-                        filename = f"image_{index}.bmp"
-                        write_on_image(fnt, char, path, filename)
-                        index += 1
-                        f_writer.writerow([char] + [filename] + [font])
-                except:
-                    print(f"Font : {font_path} is not loadable")
-                    n -= 1
-                    break
+                for char in chars:
+                    filename = f"image_{index}.bmp"
+                    write_on_image(fnt, char, path, filename)
+                    index += 1
+                    f_writer.writerow([char] + [filename] + [font])
+            for i in range(33, 65):  # Specials Chars
+                char = chr(i)
+                filename = f"image_{index}.bmp"
+                write_on_image(fnt, char, path, filename)
+                index += 1
+                f_writer.writerow([char] + [filename] + [font])
+
+                
         print(f"saved {n} fonts")
         
 
@@ -60,7 +66,7 @@ def get_clear_font_name(fonts):
 
 def write_on_image(font, text :str, path_to_save :str, name_to_save :str, size=(28, 28)):
     width, height = size
-    img = Image.new("L", (width, height), color=0)
+    img = Image.new("RGB", (width, height), color=0)
     draw = ImageDraw.Draw(img)
     w, h = draw.textsize(text, font=font)
     h += int(h*0.21)
