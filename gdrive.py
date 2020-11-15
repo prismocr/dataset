@@ -71,4 +71,3 @@ def pull(path):
         print("Version up to date")
     print("Removing tmp folder")
     shutil.rmtree(path_tmp, ignore_errors=True)
-

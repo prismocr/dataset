@@ -113,5 +113,3 @@ def unzip(path):
     path_dataset = os.path.join(path, "dataset.zip")
     with zipfile.ZipFile(path_dataset, 'r') as zip_ref:
         zip_ref.extractall()
-
-        
