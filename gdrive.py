@@ -5,7 +5,6 @@ import shutil
 import zipfile
 
 def compare_version(local, online):
-    print(online, local, online > local)
     return online > local
 
 
@@ -66,9 +65,10 @@ def pull(path):
             os.remove(path_dataset_zip)
         shutil.move(path_tmp_dataset_zip, path_dataset_zip)
         print(f"Unzipping version \"{online_version}\"")
-        print(path)
         unzip(path)
     
+    else:
+        print("Version up to date")
     print("Removing tmp folder")
     shutil.rmtree(path_tmp, ignore_errors=True)
 
