@@ -59,11 +59,15 @@ def pull(path):
             f_local_version.write(str(online_version))
 
         shutil.rmtree(path_dataset, ignore_errors=True)
-    
 
-        with zipfile.ZipFile(path_tmp_dataset_zip, 'r') as zip_ref:
-            print(f"Unzipping version \"{online_version}\"")
-            zip_ref.extractall()
+        path_dataset_zip = os.path.join(path, "dataset.zip")
+        if os.path.exists(path_dataset_zip):
+            print("Removing old dataset.zip")
+            os.remove(path_dataset_zip)
+        shutil.move(path_tmp_dataset_zip, path_dataset_zip)
+        print(f"Unzipping version \"{online_version}\"")
+        print(path)
+        unzip(path)
     
     print("Removing tmp folder")
     shutil.rmtree(path_tmp, ignore_errors=True)
