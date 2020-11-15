@@ -6,7 +6,7 @@ a dataset generator for the ocr
 - pull
 
 ## Commands
-- generate
+- generate (windows)
 - pull
 - unzip
 - exit
