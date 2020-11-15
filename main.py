@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
             remove_fonts(fonts, fonts_to_remove)
 
-            fonts = ["calibri.ttf", "LiberationSerif-Regular.ttf", "arial.ttf", "georgia.ttf", "DejaVuSans.ttf"]
+            #fonts = ["calibri.ttf", "LiberationSerif-Regular.ttf", "arial.ttf", "georgia.ttf", "DejaVuSans.ttf"]
 
             fonts_clear = get_clear_font_name(fonts)
             generate_dataset_directories(path)

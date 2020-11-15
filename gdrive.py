@@ -72,8 +72,3 @@ def pull(path):
     print("Removing tmp folder")
     shutil.rmtree(path_tmp, ignore_errors=True)
 
-
-
-            
-
-
