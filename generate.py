@@ -109,6 +109,7 @@ def zip_dataset():
             zipf.write(os.path.join(root, file))
     zipf.close()
 
+
 def unzip(path):
     path_dataset = os.path.join(path, "dataset.zip")
     with zipfile.ZipFile(path_dataset, 'r') as zip_ref:
