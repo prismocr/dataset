@@ -27,11 +27,11 @@ def generate_dataset_directories(path):
 
 def generate_dataset(path: str, fonts, fonts_path, font_size=28):
     n = 0
-    index = 0
+    index = 1
     path_to_csv = os.path.join(path, "dataset", "data.csv")
     path = os.path.join(path, "dataset", "images")
     with open(path_to_csv, "w", newline='', encoding='utf-8') as f_csv: 
-        f_writer = csv.writer(f_csv, delimiter=',')
+        f_writer = csv.writer(f_csv, delimiter='§')
         for font, font_path in zip(fonts, fonts_path):
             try:
                 fnt = ImageFont.truetype(font, font_size)
@@ -40,7 +40,7 @@ def generate_dataset(path: str, fonts, fonts_path, font_size=28):
                 continue
             n += 1
             for i in range(26):  # Letters
-                chars = [chr(97 + i), chr(65 + i)]
+                chars = [chr(97 + i)]#, chr(65 + i)]
                 for char in chars:
                     filename = f"image_{index}.bmp"
                     write_on_image(fnt, char, path, filename)
@@ -87,3 +87,9 @@ def get_all_fonts():
     return fonts
     
 
+def remove_fonts(fonts :list, fonts_to_remove :list):
+    for font in fonts_to_remove:
+        try:
+            fonts.remove(font)
+        except:
+            print(f"font : {font} could not be remove")
