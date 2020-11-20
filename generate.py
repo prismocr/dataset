@@ -53,7 +53,7 @@ def generate_dataset(path: str, fonts, fonts_path, version, font_size=30):
                     write_on_image(fnt, char, path, filename)
                     index += 1
                     f_writer.writerow([char] + [filename] + [font])
-            for i in range(33, 58):  # Specials Chars
+            for i in range(33, 65):  # Specials Chars
                 char = chr(i)
                 filename = f"image_{index}.bmp"
                 write_on_image(fnt, char, path, filename)
