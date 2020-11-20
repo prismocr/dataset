@@ -28,7 +28,7 @@ def generate_dataset_directories(path):
     mkdir(path)
 
 
-def generate_dataset(path: str, fonts, fonts_path, version, font_size=36):
+def generate_dataset(path: str, fonts, fonts_path, version, font_size=30):
     n = 0
     index = 1
     path_to_csv = os.path.join(path, "dataset", "data.csv")
@@ -53,7 +53,7 @@ def generate_dataset(path: str, fonts, fonts_path, version, font_size=36):
                     write_on_image(fnt, char, path, filename)
                     index += 1
                     f_writer.writerow([char] + [filename] + [font])
-            for i in range(33, 65):  # Specials Chars
+            for i in range(33, 58):  # Specials Chars
                 char = chr(i)
                 filename = f"image_{index}.bmp"
                 write_on_image(fnt, char, path, filename)
@@ -71,7 +71,7 @@ def get_clear_font_name(fonts):
     return clear
 
 
-def write_on_image(font, text :str, path_to_save :str, name_to_save :str, size=(40, 40)):
+def write_on_image(font, text :str, path_to_save :str, name_to_save :str, size=(28, 28)):
     width, height = size
     img = Image.new("RGB", (width, height), color=0)
     draw = ImageDraw.Draw(img)
