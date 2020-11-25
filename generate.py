@@ -39,11 +39,17 @@ def generate_dataset(path: str, fonts, fonts_path, version, font_size=30):
 
     with open(path_to_csv, "w", newline='', encoding='utf-8') as f_csv: 
         f_writer = csv.writer(f_csv, delimiter='§')
-        for font, font_path in zip(fonts, fonts_path):
+        i = 0
+        while(fonts):
+            fonts_index = random.randrange(0, len(fonts))
+            font, font_path = fonts[fonts_index], fonts_path[fonts_index]
+        # for font, font_path in zip(fonts, fonts_path):
             try:
                 fnt = ImageFont.truetype(font, font_size)
             except:
                 print(f"Font : {font_path} is not loadable")
+                fonts.pop(fonts_index)     
+                fonts_path.pop(fonts_index)
                 continue
             n += 1
             for i in range(26):  # Letters
@@ -60,7 +66,8 @@ def generate_dataset(path: str, fonts, fonts_path, version, font_size=30):
                 index += 1
                 f_writer.writerow([char] + [filename] + [font])
 
-                
+            fonts.pop(fonts_index)       
+            fonts_path.pop(fonts_index)       
         print(f"saved {n} fonts")
         
 
