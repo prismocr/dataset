@@ -1,10 +1,11 @@
 import os
 import csv
+import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from utils import *
 from matplotlib import font_manager
 import zipfile
-
+from skimage.measure import block_reduce
 
 def mkdir(path):
     """ generate directory
@@ -28,7 +29,7 @@ def generate_dataset_directories(path):
     mkdir(path)
 
 
-def generate_dataset(path: str, fonts, fonts_path, version, font_size=30):
+def generate_dataset(path: str, fonts, fonts_path, version, font_size=24):
     n = 0
     index = 1
     path_to_csv = os.path.join(path, "dataset", "data.csv")
@@ -78,13 +79,116 @@ def get_clear_font_name(fonts):
     return clear
 
 
+
+def check_black_row(img, row, size):
+    for i in range(size):
+        if img[i][row][0]:
+            return True
+    return False
+
+def check_black_col(img, col, size):
+    for i in range(size):
+        if img[col][i][0]:
+            return True
+    return False
+
+def trim(img, size):
+    left = right = top = bot = 0
+
+    for i in range(size):
+        if check_black_col(img, i, size):
+            top = i
+            break
+
+    for i in range(size):
+        if check_black_row(img, i, size):
+            left = i
+            break
+
+    for i in range(size):
+        if check_black_col(img, size-i-1, size):
+            bot = size-i
+            break
+
+    for i in range(size):
+        if check_black_row(img, size-i-1, size):
+            right = size-i
+            break
+
+
+    if (right - left < 6):
+        right += 3
+        left -= 3
+
+    if (bot - top < 6):
+        bot += 3
+        top -= 3
+
+    top -=1
+    bot += 1
+    right += 1
+    left -= 1
+    
+    if top < 0:
+        top = 0
+    
+    if left < 0:
+        left = 0
+
+    if bot >= size:
+        bot = size-1
+    
+    if right >= size:
+        right = size-1
+
+    return left, top, right, bot
+
+def resize(im, d1, d2, size):
+    #print("resize", d1, d2, d1/28, d2/28)
+    shape = im.size
+    if d1 > d2:
+        ratio = 28*d2/d1
+        img = im.resize((size, int(ratio)))
+    else:
+        ratio = ratio = 28*d1/d2
+        img = im.resize((int(ratio), size))
+    return img
+
+def add_black(im, size_m):
+    shape = im.size    
+    image = Image.new('RGB', (size_m, size_m))
+    if shape[0] == size_m:
+        obj = size_m - shape[1]
+        if not obj:
+            return im
+        image.paste(im, (0, obj//2))
+        return image
+    else:
+        obj = size_m - shape[0]
+        if not obj:
+            return im
+        image.paste(im, (obj//2, 0))
+        return image
+
 def write_on_image(font, text :str, path_to_save :str, name_to_save :str, size=(28, 28)):
     width, height = size
     img = Image.new("RGB", (width, height), color=0)
     draw = ImageDraw.Draw(img)
     w, h = draw.textsize(text, font=font)
-    h += int(h*0.21)
+    h += int(h*0.2)
     draw.text(((width-w)/2, (height-h)/2), text=text, fill='white', font=font)
+
+    np_im = np.array(img)
+    left, top, right, bottom = trim(np_im, size[0])
+
+    img = img.crop((left, top, right, bottom))
+    #print(img.size)
+    #print(name_to_save)
+    img = resize(img, right - left, bottom - top, size[0])
+    #print(img.size)
+    img = add_black(img, size[0])
+    ##print(img.size)
+    #print()
     path_to_save = os.path.join(path_to_save, name_to_save)
     img.save(path_to_save)
 

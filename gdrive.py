@@ -5,7 +5,7 @@ import shutil
 import zipfile
 
 def compare_version(local, online):
-    return int(online) > int(local)
+    return int(online) > int(local) 
 
 
 def pull(path):
