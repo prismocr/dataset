@@ -59,14 +59,15 @@ def generate_dataset(path: str, fonts, fonts_path, version, font_size=24):
                     filename = f"image_{index}.bmp"
                     write_on_image(fnt, char, path, filename)
                     index += 1
-                    f_writer.writerow([char] + [filename] + [font])
-            for i in range(33, 65):  # Specials Chars
+                    f_writer.writerow([char.lower()] + [filename] + [font])
+            
+            for i in range(46, 46): #(33, 65):  # Specials Chars
                 char = chr(i)
                 filename = f"image_{index}.bmp"
-                write_on_image(fnt, char, path, filename)
+                ratio = write_on_image(fnt, char, path, filename)
                 index += 1
-                f_writer.writerow([char] + [filename] + [font])
-
+                f_writer.writerow([char] + [ratio]+ [filename] + [font])
+            
             fonts.pop(fonts_index)       
             fonts_path.pop(fonts_index)       
         print(f"saved {n} fonts")
@@ -189,6 +190,9 @@ def write_on_image(font, text :str, path_to_save :str, name_to_save :str, size=(
     img = add_black(img, size[0])
     ##print(img.size)
     #print()
+
+    left, top, right, bottom = trim(np_im, size[0])
+
     path_to_save = os.path.join(path_to_save, name_to_save)
     img.save(path_to_save)
 

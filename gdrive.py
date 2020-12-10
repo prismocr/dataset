@@ -40,7 +40,7 @@ def pull(path):
         with open(path_dataset_version, "r") as f_local_version:
             local_version = f_local_version.readline()
     except FileNotFoundError:
-        local_version = "!"
+        local_version = "0"
 
     with open(path_tmp_version, "r") as f_online_version:
         online_version = f_online_version.readline()
