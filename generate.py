@@ -53,20 +53,25 @@ def generate_dataset(path: str, fonts, fonts_path, version, font_size=24):
                 fonts_path.pop(fonts_index)
                 continue
             n += 1
-            for i in range(26):  # Letters
-                chars = [chr(97 + i), chr(65 + i)]
-                for char in chars:
+            for r in range(1, 4, 2):
+                for i in range(26):  # Letters
+                    chars = [chr(97 + i), chr(65 + i)]
+                    for char in chars:
+                        filename = f"image_{index}.bmp"
+                        write_on_image(fnt, char, path, filename, r)
+                        index += 1
+                        f_writer.writerow([char.lower()] + [filename] + [font])
+                
+                i_dont_want_u = ["#", "$", "%", "&", "+", "*", "<", ">", "=", "@", "/"]
+                for i in range(33, 65): #(33, 65):  # Specials Chars
+                    char = chr(i)
+                    if char in i_dont_want_u:
+                        continue
                     filename = f"image_{index}.bmp"
-                    write_on_image(fnt, char, path, filename)
+                    ratio = write_on_image(fnt, char, path, filename, r)
                     index += 1
                     f_writer.writerow([char.lower()] + [filename] + [font])
-            
-            for i in range(46, 46): #(33, 65):  # Specials Chars
-                char = chr(i)
-                filename = f"image_{index}.bmp"
-                ratio = write_on_image(fnt, char, path, filename)
-                index += 1
-                f_writer.writerow([char] + [ratio]+ [filename] + [font])
+                
             
             fonts.pop(fonts_index)       
             fonts_path.pop(fonts_index)       
@@ -93,7 +98,7 @@ def check_black_col(img, col, size):
             return True
     return False
 
-def trim(img, size):
+def trim(img, size, space):
     left = right = top = bot = 0
 
     for i in range(size):
@@ -116,7 +121,7 @@ def trim(img, size):
             right = size-i
             break
 
-
+    """
     if (right - left < 6):
         right += 3
         left -= 3
@@ -125,10 +130,12 @@ def trim(img, size):
         bot += 3
         top -= 3
 
-    top -=1
-    bot += 1
-    right += 1
-    left -= 1
+    """
+
+    top -= space
+    bot += space
+    right += space
+    left -= space
     
     if top < 0:
         top = 0
@@ -171,7 +178,7 @@ def add_black(im, size_m):
         image.paste(im, (obj//2, 0))
         return image
 
-def write_on_image(font, text :str, path_to_save :str, name_to_save :str, size=(28, 28)):
+def write_on_image(font, text :str, path_to_save :str, name_to_save :str, space :int, size=(28, 28)):
     width, height = size
     img = Image.new("RGB", (width, height), color=0)
     draw = ImageDraw.Draw(img)
@@ -180,7 +187,7 @@ def write_on_image(font, text :str, path_to_save :str, name_to_save :str, size=(
     draw.text(((width-w)/2, (height-h)/2), text=text, fill='white', font=font)
 
     np_im = np.array(img)
-    left, top, right, bottom = trim(np_im, size[0])
+    left, top, right, bottom = trim(np_im, size[0], space)
 
     img = img.crop((left, top, right, bottom))
     #print(img.size)
@@ -190,8 +197,6 @@ def write_on_image(font, text :str, path_to_save :str, name_to_save :str, size=(
     img = add_black(img, size[0])
     ##print(img.size)
     #print()
-
-    left, top, right, bottom = trim(np_im, size[0])
 
     path_to_save = os.path.join(path_to_save, name_to_save)
     img.save(path_to_save)

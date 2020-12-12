@@ -4,8 +4,8 @@ from PIL import Image, ImageDraw, ImageFont
 
 path = "dataset/images/"
 
-value_width = 26*4
-value_height = 242//4
+value_width = 5
+value_height = 1
 final_image = Image.new('RGB', (28*value_width, 28*value_height))
 
 

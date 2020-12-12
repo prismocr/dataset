@@ -67,20 +67,22 @@ if __name__ == "__main__":
 
             remove_fonts(fonts, fonts_to_remove)
 
-            fonts = ["calibri.ttf"]#, "LiberationSerif-Regular.ttf", "arial.ttf", "georgia.ttf", "DejaVuSans.ttf"]
-
+            #fonts = ["calibri.ttf"]#, "LiberationSerif-Regular.ttf", "arial.ttf", "georgia.ttf", "DejaVuSans.ttf"]
+            fonts = ["georgia.ttf", "arial.ttf", "calibri.ttf"]
             fonts_clear = get_clear_font_name(fonts)
             generate_dataset_directories(path)
             generate_dataset(path, fonts_clear, fonts, version)
-
+            print("Zipping...")
             zip_dataset()
-            exit()
 
         elif command == "pull":
             pull(path)
 
         elif command == "unzip":
             unzip(path)
+
+        elif command == "zip":
+            zip_dataset()
 
         else:
             print("command is invalid")
