@@ -70,7 +70,7 @@ def generate_dataset(path: str, fonts, fonts_path, version, font_size=24):
                     filename = f"image_{index}.bmp"
                     ratio = write_on_image(fnt, char, path, filename, r)
                     index += 1
-                    f_writer.writerow([char.lower()] + [filename] + [font])
+                    f_writer.writerow([char] + [filename] + [font])
                 
             
             fonts.pop(fonts_index)       
