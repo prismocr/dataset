@@ -3,6 +3,9 @@ zip/
 tmp/
 *.zip
 
+*.bmp
+*.png
+
 __pycache__/
 .vscode/*
 !.vscode/settings.json
