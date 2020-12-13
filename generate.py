@@ -68,11 +68,10 @@ def generate_dataset(path: str, fonts, fonts_path, version, font_size=24):
                     if char in i_dont_want_u:
                         continue
                     filename = f"image_{index}.bmp"
-                    ratio = write_on_image(fnt, char, path, filename, r)
+                    write_on_image(fnt, char, path, filename, r)
                     index += 1
                     f_writer.writerow([char] + [filename] + [font])
-                
-            
+
             fonts.pop(fonts_index)       
             fonts_path.pop(fonts_index)       
         print(f"saved {n} fonts")
